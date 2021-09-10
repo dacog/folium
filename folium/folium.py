@@ -299,11 +299,13 @@ class Map(JSCSSMixin, MacroElement):
             out = self._parent._repr_html_(**kwargs)
         return out
 
-    def _to_png(self, delay=3):
+    def _to_png(self, delay=3, use_map_size=False, use_custom_size=[]):
         """Export the HTML to byte representation of a PNG image.
 
         Uses selenium to render the HTML and record a PNG. You may need to
         adjust the `delay` time keyword argument if maps render without data or tiles.
+        Use `use_map_size=True` for webdriver to use a windows size with the same dimensions as in the map settings.
+        Use `use_custom_size=[width, heigth]` to use a custom size for the webdriver window.
 
         Examples
         --------
@@ -322,7 +324,12 @@ class Map(JSCSSMixin, MacroElement):
             with temp_html_filepath(html) as fname:
                 # We need the tempfile to avoid JS security issues.
                 driver.get('file:///{path}'.format(path=fname))
-                driver.maximize_window()
+                if use_map_size:
+                    driver.set_window_size(self.width[0], self.heigth[0])
+                elif use_custom_size:
+                    driver.set_window_size(use_custom_size[0], use_custom_size[1])
+                else:
+                    driver.maximize_window()
                 time.sleep(delay)
                 png = driver.get_screenshot_as_png()
                 driver.quit()
