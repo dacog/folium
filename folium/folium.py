@@ -325,7 +325,7 @@ class Map(JSCSSMixin, MacroElement):
                 # We need the tempfile to avoid JS security issues.
                 driver.get('file:///{path}'.format(path=fname))
                 if use_map_size:
-                    driver.set_window_size(self.width[0], self.heigth[0])
+                    driver.set_window_size(self.width[0], self.height[0])
                 elif use_custom_size:
                     driver.set_window_size(use_custom_size[0], use_custom_size[1])
                 else:
